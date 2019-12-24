@@ -595,9 +595,9 @@ rocsparse_status rocsparse_zsctr(rocsparse_handle                handle,
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -874,9 +874,9 @@ rocsparse_status rocsparse_csrmv_clear(rocsparse_handle handle, rocsparse_mat_in
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -1149,7 +1149,7 @@ rocsparse_status rocsparse_csrsv_zero_pivot(rocsparse_handle          handle,
  *              \p csr_col_ind, \p info or \p buffer_size pointer is invalid.
  *  \retval     rocsparse_status_internal_error an internal error occurred.
  *  \retval     rocsparse_status_not_implemented
- *              \p trans != \ref rocsparse_operation_none or
+ *              \p trans == \ref rocsparse_operation_conjugate_transpose or
  *              \ref rocsparse_matrix_type != \ref rocsparse_matrix_type_general.
  */
 /**@{*/
@@ -1263,7 +1263,7 @@ rocsparse_status rocsparse_zcsrsv_buffer_size(rocsparse_handle                ha
  *              \p csr_col_ind, \p info or \p temp_buffer pointer is invalid.
  *  \retval     rocsparse_status_internal_error an internal error occurred.
  *  \retval     rocsparse_status_not_implemented
- *              \p trans != \ref rocsparse_operation_none or
+ *              \p trans == \ref rocsparse_operation_conjugate_transpose or
  *              \ref rocsparse_matrix_type != \ref rocsparse_matrix_type_general.
  */
 /**@{*/
@@ -1369,9 +1369,9 @@ rocsparse_status rocsparse_csrsv_clear(rocsparse_handle          handle,
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -1396,7 +1396,8 @@ rocsparse_status rocsparse_csrsv_clear(rocsparse_handle          handle,
  *  It may return before the actual computation has finished.
  *
  *  \note
- *  Currently, only \p trans == \ref rocsparse_operation_none is supported.
+ *  Currently, only \p trans == \ref rocsparse_operation_none and
+ *  \p trans == \ref rocsparse_operation_transpose is supported.
  *
  *  @param[in]
  *  handle      handle to the rocsparse library context queue.
@@ -1437,7 +1438,7 @@ rocsparse_status rocsparse_csrsv_clear(rocsparse_handle          handle,
  *  \retval     rocsparse_status_arch_mismatch the device is not supported.
  *  \retval     rocsparse_status_internal_error an internal error occurred.
  *  \retval     rocsparse_status_not_implemented
- *              \p trans != \ref rocsparse_operation_none or
+ *              \p trans == \ref rocsparse_operation_conjugate_transpose or
  *              \ref rocsparse_matrix_type != \ref rocsparse_matrix_type_general.
  *
  *  \par Example
@@ -1595,9 +1596,9 @@ rocsparse_status rocsparse_zcsrsv_solve(rocsparse_handle                handle,
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -1738,9 +1739,9 @@ rocsparse_status rocsparse_zellmv(rocsparse_handle                handle,
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -1850,9 +1851,9 @@ rocsparse_status rocsparse_zhybmv(rocsparse_handle                handle,
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans\_A == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans\_A == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans\_A == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans_A == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans_A == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans_A == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -1860,9 +1861,9 @@ rocsparse_status rocsparse_zhybmv(rocsparse_handle                handle,
  *  \f[
  *    op(B) = \left\{
  *    \begin{array}{ll}
- *        B,   & \text{if trans\_B == rocsparse\_operation\_none} \\
- *        B^T, & \text{if trans\_B == rocsparse\_operation\_transpose} \\
- *        B^H, & \text{if trans\_B == rocsparse\_operation\_conjugate\_transpose}
+ *        B,   & \text{if trans_B == rocsparse_operation_none} \\
+ *        B^T, & \text{if trans_B == rocsparse_operation_transpose} \\
+ *        B^H, & \text{if trans_B == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -2426,9 +2427,9 @@ rocsparse_status rocsparse_csrgemm_nnz(rocsparse_handle          handle,
  *  \f[
  *    op(A) = \left\{
  *    \begin{array}{ll}
- *        A,   & \text{if trans\_A == rocsparse\_operation\_none} \\
- *        A^T, & \text{if trans\_A == rocsparse\_operation\_transpose} \\
- *        A^H, & \text{if trans\_A == rocsparse\_operation\_conjugate\_transpose}
+ *        A,   & \text{if trans_A == rocsparse_operation_none} \\
+ *        A^T, & \text{if trans_A == rocsparse_operation_transpose} \\
+ *        A^H, & \text{if trans_A == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -2436,9 +2437,9 @@ rocsparse_status rocsparse_csrgemm_nnz(rocsparse_handle          handle,
  *  \f[
  *    op(B) = \left\{
  *    \begin{array}{ll}
- *        B,   & \text{if trans\_B == rocsparse\_operation\_none} \\
- *        B^T, & \text{if trans\_B == rocsparse\_operation\_transpose} \\
- *        B^H, & \text{if trans\_B == rocsparse\_operation\_conjugate\_transpose}
+ *        B,   & \text{if trans_B == rocsparse_operation_none} \\
+ *        B^T, & \text{if trans_B == rocsparse_operation_transpose} \\
+ *        B^H, & \text{if trans_B == rocsparse_operation_conjugate_transpose}
  *    \end{array}
  *    \right.
  *  \f]
@@ -3750,7 +3751,7 @@ rocsparse_status rocsparse_csr2ell_width(rocsparse_handle          handle,
  *  \p rocsparse_csr2ell converts a CSR matrix into an ELL matrix. It is assumed,
  *  that \p ell_val and \p ell_col_ind are allocated. Allocation size is computed by the
  *  number of rows times the number of ELL non-zero elements per row, such that
- *  \f$\text{nnz}_{\text{ELL}} = m \cdot \text{ell\_width}\f$. The number of ELL
+ *  \f$\text{nnz}_{\text{ELL}} = m \cdot \text{ell_width}\f$. The number of ELL
  *  non-zero elements per row is obtained by rocsparse_csr2ell_width().
  *
  *  \note

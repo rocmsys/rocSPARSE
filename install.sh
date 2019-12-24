@@ -30,7 +30,7 @@ supported_distro( )
   fi
 
   case "${ID}" in
-    ubuntu|centos|rhel|fedora|sles)
+    ubuntu|centos|rhel|fedora|sles|opensuse-leap)
         true
         ;;
     *)  printf "This script is currently supported on Ubuntu, CentOS, RHEL, Fedora and SLES\n"
@@ -130,10 +130,10 @@ install_packages( )
   local library_dependencies_fedora=( "make" "cmake" "rocm-dev" "gcc-c++" "libcxx-devel" "rpm-build" "numactl-libs" "rocprim" )
   local library_dependencies_sles=( "make" "cmake" "rocm-dev" "gcc-c++" "libcxxtools9" "rpm-build" "rocprim" )
 
-  local client_dependencies_ubuntu=( "libboost-program-options-dev" )
-  local client_dependencies_centos=( "boost-devel" )
-  local client_dependencies_fedora=( "boost-devel" )
-  local client_dependencies_sles=( "libboost_program_options1_66_0-devel" "pkg-config" "dpkg" )
+  local client_dependencies_ubuntu=( "libboost-program-options-dev" "python3" "python3-yaml" )
+  local client_dependencies_centos=( "boost-devel" "python36" "PyYAML" "python3-pip" )
+  local client_dependencies_fedora=( "boost-devel" "python36" "PyYAML" "python3-pip" )
+  local client_dependencies_sles=( "libboost_program_options1_66_0-devel" "pkg-config" "dpkg" "python3-pip" )
 
   case "${ID}" in
     ubuntu)
@@ -153,6 +153,7 @@ install_packages( )
 
       if [[ "${build_clients}" == true ]]; then
         install_yum_packages "${client_dependencies_centos[@]}"
+        pip3 install pyyaml
       fi
       ;;
 
@@ -162,15 +163,17 @@ install_packages( )
 
       if [[ "${build_clients}" == true ]]; then
         install_dnf_packages "${client_dependencies_fedora[@]}"
+        pip3 install pyyaml
       fi
       ;;
 
-    sles)
+    sles|opensuse-leap)
 #     elevate_if_not_root zypper -y update
       install_zypper_packages "${library_dependencies_sles[@]}"
 
       if [[ "${build_clients}" == true ]]; then
         install_zypper_packages "${client_dependencies_sles[@]}"
+        pip3 install pyyaml
       fi
       ;;
     *)
@@ -210,10 +213,15 @@ supported_distro
 # #################################################
 install_package=false
 install_dependencies=false
-install_prefix=rocsparse-install
 build_clients=false
 build_release=true
 build_hip_clang=false
+install_prefix=rocsparse-install
+
+rocm_path=/opt/rocm
+if ! [ -z ${ROCM_PATH+x} ]; then
+    rocm_path=${ROCM_PATH}
+fi
 
 # #################################################
 # Parameter parsing
@@ -307,7 +315,7 @@ fi
 
 # We append customary rocm path; if user provides custom rocm path in ${path}, our
 # hard-coded path has lesser priority
-export PATH=${PATH}:/opt/rocm/bin
+export PATH=${PATH}:${rocm_path}/bin:/opt/rocm/bin
 
 pushd .
   # #################################################
@@ -337,9 +345,9 @@ pushd .
 
   # Build library with AMD toolchain because of existense of device kernels
   if [[ "${build_clients}" == true ]]; then
-    CXX=${compiler} ${cmake_executable} ${cmake_common_options} ${cmake_client_options} -DCPACK_SET_DESTDIR=OFF -DCMAKE_INSTALL_PREFIX=rocsparse-install -DCPACK_PACKAGING_INSTALL_PREFIX=/opt/rocm ../..
+    CXX=${compiler} ${cmake_executable} ${cmake_common_options} ${cmake_client_options} -DCPACK_SET_DESTDIR=OFF -DCMAKE_INSTALL_PREFIX=${install_prefix} -DCPACK_PACKAGING_INSTALL_PREFIX=${rocm_path} -DROCM_PATH=${rocm_path} ../..
   else
-    CXX=${compiler} ${cmake_executable} ${cmake_common_options} -DCPACK_SET_DESTDIR=OFF -DCMAKE_INSTALL_PREFIX=rocsparse-install -DCPACK_PACKAGING_INSTALL_PREFIX=/opt/rocm ../..
+    CXX=${compiler} ${cmake_executable} ${cmake_common_options} -DCPACK_SET_DESTDIR=OFF -DCMAKE_INSTALL_PREFIX=${install_prefix} -DCPACK_PACKAGING_INSTALL_PREFIX=${rocm_path} -DROCM_PATH=${rocm_path} ../..
   fi
   check_exit_code
 
@@ -364,7 +372,7 @@ pushd .
       fedora)
         elevate_if_not_root dnf install rocsparse-*.rpm
       ;;
-      sles)
+      sles|opensuse-leap)
         elevate_if_not_root zypper -n --no-gpg-checks install rocsparse-*.rpm
       ;;
     esac

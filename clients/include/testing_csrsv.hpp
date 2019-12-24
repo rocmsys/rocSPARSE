@@ -546,6 +546,12 @@ void testing_csrsv(const Arguments& arg)
                               false,
                               full_rank);
 
+    // Non-squared matrices are not supported
+    if(M != N)
+    {
+        return;
+    }
+
     // Allocate host memory for vectors
     host_vector<T>             hx(N);
     host_vector<T>             hy_1(M);
@@ -694,7 +700,9 @@ void testing_csrsv(const Arguments& arg)
             hipMemcpy(h_solve_pivot_2, d_solve_pivot_2, sizeof(T), hipMemcpyDeviceToHost));
 
         // CPU csrsv
-        host_csrsv<T>(M,
+        host_csrsv<T>(trans,
+                      M,
+                      nnz,
                       h_alpha,
                       hcsr_row_ptr,
                       hcsr_col_ind,
